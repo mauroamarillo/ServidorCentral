@@ -79,10 +79,7 @@ public class PedidoD {
 
     public void eliminarPedido(int numero) throws SQLException, ClassNotFoundException {
        this.st = es.generarSt();
-       String query = "DELETE FROM pedidos_producto "
-                + "WHERE pedido = " + numero;
-        st.execute(query);
-        query = "DELETE FROM pedidos"
+       String query = "DELETE FROM pedidos"
                 + " WHERE numero = " + numero;
         st.execute(query);
         st.getConnection().close();
