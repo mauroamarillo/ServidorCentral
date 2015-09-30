@@ -6,7 +6,7 @@
 package Logica;
 
 import java.sql.SQLException;
-
+ 
 /**
  *
  * @author Mauro

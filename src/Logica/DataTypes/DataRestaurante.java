@@ -78,7 +78,7 @@ public class DataRestaurante {
             this.imagenes.put(entry.getKey(), I);
         }
     }
-
+    
     public String getNickname() {
         return nickname;
     }
