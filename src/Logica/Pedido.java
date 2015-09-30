@@ -26,18 +26,20 @@ public class Pedido {
     private Estado estado;
     private HashMap prodPedidos;
     private Cliente cliente;
+    private HashMap historialEstados;
 
     private Restaurante restaurante;
     
     private PedidoD PedidoDatos = new PedidoD();
 
-    public Pedido(int numero, Date fecha, Estado estado, Cliente cliente, Restaurante restaurante, HashMap prodPedidos) {
+    public Pedido(int numero, Date fecha, Estado estado, Cliente cliente, Restaurante restaurante, HashMap prodPedidos, HashMap historialEstados) {
         this.numero = numero;
         this.cliente = cliente;
         this.restaurante = restaurante;
         this.fecha = fecha;
         this.estado = estado;
         this.prodPedidos = prodPedidos;
+        this.historialEstados = historialEstados;
     }
 
     public DataPedido getDataType() throws SQLException, ClassNotFoundException {
@@ -49,7 +51,7 @@ public class Pedido {
             ProdPedido pp = (ProdPedido) entry.getValue();
             dataProdPedidos.put(pp.getProducto().getNombre(), pp.getDataType());
         }
-        return new DataPedido(numero, fecha, estado, dataProdPedidos, cliente.getNickname(), restaurante.getNickname(), getPrecio(), getCalificacion());
+        return new DataPedido(numero, fecha, estado, dataProdPedidos, cliente.getNickname(), restaurante.getNickname(), getPrecio(), getCalificacion(), getHistorialEstados());
     }
 
     public Cliente getCliente() {
@@ -118,5 +120,9 @@ public class Pedido {
 
     public void setProdPedidos(HashMap prodPedidos) {
         this.prodPedidos = prodPedidos;
+    }
+
+    public HashMap getHistorialEstados() {
+        return this.historialEstados;
     }
 }

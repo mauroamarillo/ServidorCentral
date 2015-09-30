@@ -5,6 +5,7 @@ import Datos.PedidoD;
 import Datos.UsuarioD;
 import Logica.DataTypes.DataCalificacion;
 import Logica.DataTypes.DataCliente;
+import Logica.DataTypes.DataHistorialPedido;
 import Logica.DataTypes.DataPedido;
 import Logica.DataTypes.DataProdPedido;
 import Logica.DataTypes.DataRestaurante;
@@ -112,6 +113,7 @@ public final class ControladorUsuario {
         }
         return resultado;
     }
+    
     /*obtener pedidos de un producto*/
 
     public HashMap getDataPedidosProducto(String R, String P) throws SQLException, ClassNotFoundException {
@@ -211,7 +213,6 @@ public final class ControladorUsuario {
     }
 
     private void validarDatosC(Cliente C) throws SQLException, Exception {
-
         if (C.getNickname().isEmpty()) {
             throw new Exception("Asignar Nickname");
         }
@@ -236,7 +237,6 @@ public final class ControladorUsuario {
     }
 
     private void validarDatosR(Restaurante R, int cat[]) throws SQLException, Exception {
-
         if (R.getNickname().isEmpty()) {
             throw new Exception("Asignar Nickname");
         }
@@ -336,6 +336,17 @@ public final class ControladorUsuario {
         }
         return res;
     }
+    
+    public HashMap retornarCambiosEstado(int pedido) throws SQLException, ClassNotFoundException{
+        HashMap resultado = new HashMap();
+        java.sql.ResultSet rs = PedidoDatos.consultarCambiosEstado(pedido);
+        
+        while(rs.next()){
+            resultado.put(rs.getInt("pedido") + "_" + rs.getInt("estado"), new DataHistorialPedido(rs.getInt("estado"), rs.getString("fechahora")));
+        }
+        
+        return resultado;
+    }
 
     /*
      MECANISMO DE BUSQUEDA:
@@ -420,7 +431,7 @@ public final class ControladorUsuario {
 
     public int insertarPedido(String D, String M, String A, Estado estado, String cliente, String restaurante, HashMap dataProdPedidos) throws SQLException, Exception {
         Fecha fecha = new Fecha(D, M, A);
-        Pedido P = new Pedido(0, fecha.getSQLDate(), estado, this._buscarCliente(cliente), this._buscarRestaurante(restaurante), dataProdPedidos);
+        Pedido P = new Pedido(0, fecha.getSQLDate(), estado, this._buscarCliente(cliente), this._buscarRestaurante(restaurante), dataProdPedidos, null);
         validarPedido(P);
         int numero = (PedidoDatos.agregarPedido(fecha.getSQLDate(), estado.ordinal(), cliente, restaurante));
         Iterator it = P.getProdPedidos().entrySet().iterator();
@@ -442,7 +453,7 @@ public final class ControladorUsuario {
             java.sql.ResultSet rs = PedidoDatos.listarPedidosDeCliente(C.getNickname());
             C.setPedidos(new HashMap());
             while (rs.next()) {
-                Pedido P = new Pedido(rs.getInt("numero"), rs.getDate("fecha"), Estado.values()[rs.getInt("Estado")], this._buscarCliente(rs.getString("cliente")), this._buscarRestaurante(rs.getString("restaurante")), null);
+                Pedido P = new Pedido(rs.getInt("numero"), rs.getDate("fecha"), Estado.values()[rs.getInt("Estado")], this._buscarCliente(rs.getString("cliente")), this._buscarRestaurante(rs.getString("restaurante")), null, retornarCambiosEstado(rs.getInt("numero")));
                 C.getPedidos().put(P.getNumero(), P);
             }
         }
@@ -551,7 +562,7 @@ public final class ControladorUsuario {
 
     public void modificarCliente(String nick, String nombre, String email, String direccion, String apellido, String imagen, String pwd) throws SQLException, ClassNotFoundException {
         UsuarioDatos.modificarCliente(nick, nombre, email, direccion, apellido, imagen, pwd);
-        this.Clientes = retornarClientes();
+        actualizarDatos();
     }
 
     public HashMap getPedidosRestaurante(String restaurante) throws SQLException, ClassNotFoundException {

@@ -136,4 +136,14 @@ public class PedidoD {
         st.execute(query);
         st.getConnection().close();
     }
+    
+    public ResultSet consultarCambiosEstado(int pedido) throws SQLException, ClassNotFoundException{
+        this.st = es.generarSt();
+        String query = "SELECT *"
+                + " FROM historialcambioestado"
+                + " WHERE pedido = " + pedido + ";";
+        ResultSet rs = st.executeQuery(query);
+        st.getConnection().close();
+        return rs;
+    }
 }

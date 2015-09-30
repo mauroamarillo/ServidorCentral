@@ -24,12 +24,13 @@ public class DataPedido {
     private final Date fecha;
     private final Estado estado;
     private final HashMap prodPedidos;
+    private final HashMap historialEstados;
     private final String cliente;
     private final String restaurante;
     private final float precio;
     private final DataCalificacion calificacion;
 
-    public DataPedido(int numero, Date fecha, Estado estado, HashMap prodPedidos, String cliente, String restaurante, float precio, DataCalificacion calificacion) {
+    public DataPedido(int numero, Date fecha, Estado estado, HashMap prodPedidos, String cliente, String restaurante, float precio, DataCalificacion calificacion, HashMap historialEstados) {
         this.numero = numero;
         this.fecha = fecha;
         this.estado = estado;
@@ -38,6 +39,7 @@ public class DataPedido {
         this.restaurante = restaurante;
         this.precio = precio;
         this.calificacion = calificacion;
+        this.historialEstados = historialEstados;
     }
 
     public DataPedido(Pedido P) throws SQLException, ClassNotFoundException {
@@ -56,6 +58,7 @@ public class DataPedido {
             prodPedidos.put(p.getProducto().getNombre(), new DataProdPedido(p));
         }
         this.calificacion = P.getCalificacion();
+        this.historialEstados = P.getHistorialEstados();
     }
 
     public float getPrecio() {
@@ -88,6 +91,10 @@ public class DataPedido {
 
     public DataCalificacion getCalificacion() {
         return calificacion;
+    }
+
+    public HashMap getHistorialEstados() {
+        return historialEstados;
     }
     
 }
