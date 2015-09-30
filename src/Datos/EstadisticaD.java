@@ -26,7 +26,7 @@ public class EstadisticaD {
     public void insertarVisita(String ip, String url, String browser, String so) throws SQLException, ClassNotFoundException{
         this.st = es.generarSt();
         String insert = "INSERT INTO historialvisitas(ip, url, browser, so, fecha) "
-            + " VALUES ('" + ip + "', '" + url + "', '" + browser + "', '" + so + "', '" + new Fecha() + "', ?);";
+            + " VALUES ('" + ip + "', '" + url + "', '" + browser + "', '" + so + "', '" + new Fecha().getSQLDate() + "');";
         st.execute(insert);
         st.getConnection().close();
     }
