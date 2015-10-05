@@ -5,7 +5,9 @@
  */
 package Logica;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
  
 /**
  *
@@ -20,4 +22,24 @@ public class Estadistica {
     public void registrarVisita(String ip, String url, String browser, String so) throws SQLException, ClassNotFoundException{
         EstaDatos.insertarVisita(ip, url, browser, so);
     }
+    
+    public HashMap getVisitas() throws SQLException, ClassNotFoundException{
+        ResultSet datos = EstaDatos.consultarVisitasPorURL();
+        HashMap resultado = new HashMap();
+        while(datos.next()){
+            resultado.put(datos.getString("restaurante"), datos.getInt("visitas"));
+        }
+        return resultado;
+    }
+    
+    public HashMap getVisitasPorRestaurante() throws SQLException, ClassNotFoundException{
+        ResultSet datos = EstaDatos.consultarVisitasRestaurante();
+        HashMap resultado = new HashMap();
+        while(datos.next()){
+            resultado.put(datos.getString("restaurante"), datos.getInt("visitas"));
+        }
+        return resultado;
+    }
+    
+    //GET VISITAS POR SO Y POR BROWSERRRRRRR
 }
